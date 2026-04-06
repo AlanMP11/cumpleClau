@@ -9,7 +9,7 @@
   body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(
-        30deg,
+        60deg,
         #ffa3bf 0%,   /* rosa muy suave */
         #ffd6e0 30%,  /* transición rosada */
         #fff1c1 70%,  /* amarillo cálido */
@@ -183,6 +183,7 @@ function next() {
     }
   });
   if (index === estrofas.length - 1) {
+    document.getElementById('nextBtn').innerText = "❤️";
     document.getElementById('nextBtn').onclick = null;
     }
 }
