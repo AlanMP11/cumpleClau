@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para mi chiquita ❤️</title>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(
+        60deg,
+        #ffa3bf 0%,   /* rosa muy suave */
+        #ffd6e0 30%,  /* transición rosada */
+        #fff1c1 70%,  /* amarillo cálido */
+        #ffeea8 100%  /* amarillo muy ligero */
+    );
+    color: #161515;
+    overflow: hidden;
+  }
+  body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 60%);
+    z-index: 0;
+  }
+
+  #startScreen, #app {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  #app {
+    display: none;
+  }
+
+  button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    background: #ff4d6d;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+  }
+
+  .estrofa {
+    position: absolute;
+    max-width: 80%;
+    text-align: center;
+    font-size: 24px;
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    transition: all 1.2s ease;
+  }
+
+  .visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  #nextBtn {
+    position: absolute;
+    bottom: 40px;
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- Pantalla inicial -->
+<div id="startScreen">
+  <h1>Tengo algo para ti amor❤️</h1>
+  <button onclick="start()">Tocar para comenzar</button>
+</div>
+
+<!-- App -->
+<div id="app">
+  <canvas id="bg"></canvas>
+
+  <div class="estrofa">Hoy no es un día normal,<br>hoy el tiempo se detiene,<br>porque el mundo te celebra…<br>y yo celebro que me tienes.</div>
+    <div class="estrofa">Llegaste sin aviso,<br>sin pedir permiso entraste,<br>ordenaste mi cabeza<br>y del caos me alejaste.</div>
+
+    <div class="estrofa">Y ahora mírame,<br>escribiendo lo que siento por ti,<br>porque desde que llegaste…<br>la felicidad no tiene fin.</div>
+
+    <div class="estrofa">Y sé que no soy santo,<br>también fallo y me equivoco,<br>a veces digo cosas<br>que después me vuelven loco.</div>
+
+    <div class="estrofa">No siempre hago lo correcto,<br>ni reacciono como debo,<br>tropiezo con mi orgullo<br>y a veces me gana el miedo.</div>
+
+    <div class="estrofa">Pero, aunque falle el modo,<br>mi intención sigue intacta:<br>eres la pieza clave,<br>lo único que no me falta.</div>
+
+    <div class="estrofa">Y aunque a veces me pierda<br>y no sepa cómo actuar,<br>no me rindo contigo…<br>siempre quiero intentar.</div>
+
+    <div class="estrofa">No eres perfecta,<br>y qué bueno, eso te hace real,<br>porque en cada uno de tus defectos<br>yo encontré algo especial.</div>
+
+    <div class="estrofa">Porque contigo aprendí<br>que amar no es solo bonito,<br>es quedarte en los días<br>donde lloro, fallo y grito.</div>
+
+    <div class="estrofa">Que no todo en mí es fácil,<br>ni perfecto el corazón,<br>pero si algo tengo claro<br>es que te elijo en cada ocasión.</div>
+
+    <div class="estrofa">Es elegirte mil veces,<br>incluso sin razón,<br>es llamarte “mi hogar”<br>aunque no haya dirección.</div>
+
+    <div class="estrofa">Y hoy no es un final,<br>es otro capítulo contigo,<br>más recuerdos que escribir,<br>más caminos compartidos.</div>
+
+    <div class="estrofa">Que la vida nos sorprenda<br>con mil risas por delante,<br>y que nunca se nos apague<br>hasta que yo te dé un diamante.</div>
+
+    <div class="estrofa">Que aunque el mundo dé mil vueltas<br>y nos cambie la marea,<br>nuestra historia sea la luz<br>que todo el cielo colorea.</div>
+
+    <div class="estrofa">Me despido de este verso,<br>pero no de lo que siento,<br>porque tú eres mi presente…<br>y también lo que yo intento.</div>
+
+    <div class="estrofa">Feliz vuelta al sol,<br>que vengan muchas más así,<br>y si es contigo a mi lado…<br>la verdad que ya gané aquí</div>
+    <div class="estrofa">Felices 29 mi amor,<br>vamos por muchos mas<br> ❤️ Para Claudia de Alan con todo su corazón…</div>
+  <button id="nextBtn" onclick="next()">Siguiente</button>
+</div>
+
+<!-- Musica -->
+<audio id="music" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let index = 0;
+const estrofas = document.querySelectorAll('.estrofa');
+
+function start() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+
+  const music = document.getElementById('music');
+  music.currentTime = 0;
+    music.play().then(() => {
+    console.log("Audio iniciado");
+    }).catch(err => {
+    console.log("Error al reproducir:", err);
+    });
+
+  show();
+  startParticles();
+}
+
+function show() {
+  estrofas[index].classList.add('visible');
+}
+
+function next() {
+  // Marcar la actual como pasada
+  if (index < estrofas.length) {
+    estrofas[index].classList.remove('visible');
+    estrofas[index].classList.add('pasada');
+  }
+
+  index++;
+
+  // Mostrar la nueva
+  if (index < estrofas.length) {
+    estrofas[index].classList.add('visible');
+  } else {
+    document.getElementById('nextBtn').innerText = "❤️";
+  }
+
+  
+  estrofas.forEach((el, i) => {
+    if (i < index) {
+      el.style.transform = `translateY(-${80 + (index - i)*20}px) scale(0.9)`;
+      el.style.opacity = 0.1;
+    }
+  });
+  if (index === estrofas.length - 1) {
+    document.getElementById('nextBtn').innerText = "❤️";
+    document.getElementById('nextBtn').onclick = null;
+    }
+}
+
+
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function startParticles() {
+  for (let i = 0; i < 80; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 4 + 1,
+      d: Math.random() * 1
+    });
+  }
+  animate();
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "rgba(255, 182, 193, 0.4)";
+  ctx.beginPath();
+
+  particles.forEach(p => {
+    ctx.moveTo(p.x, p.y);
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
+  });
+
+  ctx.fill();
+  moveParticles();
+  requestAnimationFrame(animate);
+}
+
+function moveParticles() {
+  particles.forEach(p => {
+    p.y += p.d;
+    if (p.y > canvas.height) {
+      p.y = 0;
+      p.x = Math.random() * canvas.width;
+    }
+  });
+}
+</script>
+
+</body>
+</html>
